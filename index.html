@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حديث السواك</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Naskh Arabic', serif;
+            background: url('background.jpeg') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: fadeInUp 1s ease-out;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .title {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .quote-container {
+            background: linear-gradient(135deg, #16a085 0%, #1abc9c 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .quote-container::before {
+            content: '"';
+            position: absolute;
+            top: -20px;
+            right: 30px;
+            font-size: 8rem;
+            color: rgba(255, 255, 255, 0.3);
+            font-family: serif;
+        }
+        
+        .quote-container::after {
+            content: '"';
+            position: absolute;
+            bottom: -60px;
+            left: 30px;
+            font-size: 8rem;
+            color: rgba(255, 255, 255, 0.3);
+            font-family: serif;
+        }
+        
+        .hadith-text {
+            color: white;
+            font-size: 1.8rem;
+            line-height: 2.2;
+            font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+        }
+        
+        .translation {
+            color: #34495e;
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            border-left: 5px solid #e74c3c;
+        }
+        
+        .source {
+            color: #7f8c8d;
+            font-size: 1rem;
+            margin-top: 20px;
+            font-style: italic;
+        }
+        
+        .decoration {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+            z-index: 2;
+        }
+        
+        .decoration:nth-child(1) {
+            top: 20px;
+            left: 20px;
+            animation-delay: 0s;
+        }
+        
+        .decoration:nth-child(2) {
+            top: 60px;
+            right: 40px;
+            animation-delay: 2s;
+        }
+        
+        .decoration:nth-child(3) {
+            bottom: 40px;
+            left: 60px;
+            animation-delay: 4s;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+        
+
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
+            
+            .hadith-text {
+                font-size: 1.4rem;
+            }
+            
+            .translation {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="decoration"></div>
+        <div class="decoration"></div>
+        <div class="decoration"></div>
+        
+        
+        <div class="quote-container pulse">
+            <div class="hadith-text">
+                <!-- Quote will be loaded dynamically -->
+            </div>
+        </div>
+        
+
+        
+
+    </div>
+
+    <script>
+        // Array of Hadith quotes
+        const hadithQuotes = [
+            "قال رسول الله صلى الله عليه وآله وسلم: \"ما زال جبرئيل يوصيني بالسواك حتى ظننت أنه سيجعله فريضة\"",
+            "عن النبيّ صلى الله عليه وآله وسلم: \"ليس منّي من استخفّ بصلاته، لا يرد الحوض عليَّ لا والله\"",
+            "عن النبي صلى الله عليه وآله وسلم: \"إن لله ملكاً ينزل كل ليلة فينادي يا أبناء العشرين جدوا واجتهدوا\"",
+            "عن النبي محمد صلى الله عليه وآله وسلم: \"إن العبد لا تزول قدماه يوم القيامة حتى يسأل عن عمره فيما أفناه وعن شبابه فيما أبلاه\""
+        ];
+        
+        // Function to get random quote
+        function getRandomQuote() {
+            const randomIndex = Math.floor(Math.random() * hadithQuotes.length);
+            return hadithQuotes[randomIndex];
+        }
+        
+        // Add some interactive effects
+        document.addEventListener('DOMContentLoaded', function() {
+            const quoteContainer = document.querySelector('.quote-container');
+            const decorations = document.querySelectorAll('.decoration');
+            const hadithText = document.querySelector('.hadith-text');
+            
+            // Set random quote on page load
+            hadithText.textContent = getRandomQuote();
+            
+            // Add click effect to the quote (also changes quote)
+            quoteContainer.addEventListener('click', function() {
+                this.style.transform = 'scale(1.02)';
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                }, 200);
+                
+                // Change to a different random quote when clicked
+                const currentQuote = hadithText.textContent;
+                let newQuote;
+                do {
+                    newQuote = getRandomQuote();
+                } while (newQuote === currentQuote && hadithQuotes.length > 1);
+                
+                hadithText.style.opacity = '0';
+                hadithText.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    hadithText.textContent = newQuote;
+                    hadithText.style.transition = 'all 0.5s ease-out';
+                    hadithText.style.opacity = '1';
+                    hadithText.style.transform = 'translateY(0)';
+                }, 200);
+            });
+            
+            // Add hover effects to decorations
+            decorations.forEach(decoration => {
+                decoration.addEventListener('mouseenter', function() {
+                    this.style.background = 'rgba(255, 255, 255, 0.3)';
+                    this.style.transform = 'scale(1.2)';
+                });
+                
+                decoration.addEventListener('mouseleave', function() {
+                    this.style.background = 'rgba(255, 255, 255, 0.1)';
+                    this.style.transform = 'scale(1)';
+                });
+            });
+            
+            // Add a subtle entrance animation for the text
+            hadithText.style.opacity = '0';
+            hadithText.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                hadithText.style.transition = 'all 1s ease-out';
+                hadithText.style.opacity = '1';
+                hadithText.style.transform = 'translateY(0)';
+            }, 500);
+        });
+    </script>
+</body>
+</html>
