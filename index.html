@@ -189,6 +189,95 @@
             }
         }
         
+        /* French mode styles */
+        body.french-mode {
+            background: url('night.png') no-repeat center center fixed !important;
+            background-size: cover !important;
+        }
+        
+        body.french-mode .container {
+            background: rgba(0, 0, 0, 0.8) !important;
+            color: #ffffff !important;
+        }
+        
+        body.french-mode .title {
+            color: #ffffff !important;
+        }
+        
+        body.french-mode .quote-container {
+            background: linear-gradient(135deg, #1a237e 0%, #283593 100%) !important;
+        }
+        
+        body.french-mode .translation {
+            background: rgba(0, 0, 0, 0.6) !important;
+            color: #ecf0f1 !important;
+            border-left: 5px solid #e74c3c !important;
+        }
+        
+        body.french-mode .source {
+            color: #bdc3c7 !important;
+        }
+        
+        /* Swipe indicator */
+        .swipe-indicator {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .swipe-indicator.show {
+            opacity: 1;
+        }
+        
+        /* Swipe animation effects - subtle version */
+        .swipe-animation {
+            animation: swipeUp 0.3s ease-out;
+        }
+        
+        @keyframes swipeUp {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(-5px) scale(1.005);
+                opacity: 0.95;
+            }
+            100% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .language-switch-animation {
+            animation: languageSwitch 0.4s ease-in-out;
+        }
+        
+        @keyframes languageSwitch {
+            0% {
+                transform: scale(1) rotateY(0deg);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(0.98) rotateY(180deg);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1) rotateY(360deg);
+                opacity: 1;
+            }
+        }
+        
+        
         @media (max-width: 768px) {
             .container {
                 padding: 20px;
@@ -227,6 +316,10 @@
     <div class="logo-container">
         <img src="logo.png" alt="Logo" class="logo">
     </div>
+    
+    <div class="swipe-indicator" id="swipeIndicator">
+        Glissez vers le haut pour changer de langue
+    </div>
 
     <script>
         // Array of Hadith quotes
@@ -252,12 +345,127 @@
             "«لقد كان الرسول الأكرم (صلى الله عليه وآله) أميناً وصادقاً وصبوراً. صاحب مروءة ويدافع عن المظلومين في جميع الأوضاع. حَسَن الفعل، تصرفاته مع الناس كانت مبنية على الصدق والصفاء والحسن». الإمام السيد على الخامننى (دام ظله)",
             "القرآن الكريم: ﴿يَا بَنِي آدَمَ خُذُواْ زِينَتَكُمْ عِندَ كُلِّ مَسْجِد﴾ (الأعراف:31)"
         ];
+
+        // Array of French quotes (dummy data)
+        const frenchQuotes = [
+  "La bonté est la moitié de la religion. al-bihar",
+  "Vous avez dans le prophète de dieu le plus beau modèle à suivre. al-ahzab / 21",
+  "Accueille ton frère avec un visage souriant. al-kafi",
+  "Honorez vos enfants et améliorez leurs manières, il vous sera pardonné. bihar al-anwar",
+  "Le regard par amour de l'enfant pour ses parents, est un acte de dévotion. bihar al-anwar",
+  "Le plus raisonnable des gens est celui qui est le plus courtois envers les gens, et le plus misérable des gens est celui qui insulte les gens. bihar al-anwar",
+  "La meilleure des actions est celle qui est constante, même si elle est peu. tanbih alkhawater",
+  "Celui qui s'engage à soutenir son frère dans la foi est comparable à une personne ayant consacre neuf mille ans à adorer allah, en jeûnant le jour et en priant la nuit. wasa'il al-shia",
+  "Soyez miséricordieux envers vos enfants, et si vous leur promettez quelque chose, tenez votre promesse ... tahdhib al-ahkam",
+  "Oui, tu es d'une moralité (qualité et caractère) [la plus] éminente. sourate al-qalam / 4",
+  "Celui qui enseigne un verset du livre d'allah aura une récompense pour chaque fois qu'il est récité. mustadrak al-wasa'il",
+  "Il n'y a pas un homme qui enseigne le coran à son enfant sans qu'allah ne couronne ses parents le jour du jugement dernier avec la couronne royale, et leur donne des vêtements que les gens n'ont jamais vus. kanz al-oummal",
+  "Selon le noble prophète mohammad (paix sur lui et sur sa sainte famille) : la personne qui se marie préserve véritablement la moitié de sa religion al-kafi",
+  "L'adorateur se trouve le plus proche de son seigneur, lorsqu'il est en position de prosternation. kanz'al-ommál",
+  "Celui qui fait plaisir à ses parents a vraiment plu à allah, et celui qui a fâché ses parents a vraiment fâché allah. kanzul 'ummal",
+  "Selon le saint prophete mohammad (paix sur lui et sur sa famille) allah serait gêné devant un serviteur qui lève les mains vers lui (en priant) et retourne les mains vides. bihar al-anwar",
+  "L'attente de la délivrance (la réapparition de l'imam al-mahdi « que dieu accélère sa noble délivrance ») avec patience est un acte d'adoration . bihar al-anwar"
+];
+
         console.log(hadithQuotes.length);
         
-        // Function to get random quote
+        // Language state
+        let currentLanguage = 'arabic'; // 'arabic' or 'french'
+        
+        // Function to get random quote based on current language
         function getRandomQuote() {
-            const randomIndex = Math.floor(Math.random() * hadithQuotes.length);
-            return hadithQuotes[randomIndex];
+            const quotes = currentLanguage === 'arabic' ? hadithQuotes : frenchQuotes;
+            const randomIndex = Math.floor(Math.random() * quotes.length);
+            return quotes[randomIndex];
+        }
+        
+        // Function to switch language
+        function switchLanguage() {
+            currentLanguage = currentLanguage === 'arabic' ? 'french' : 'arabic';
+            
+            // Add swipe animation to container
+            const container = document.querySelector('.container');
+            container.classList.add('language-switch-animation');
+            
+            // Remove animation class after animation completes
+            setTimeout(() => {
+                container.classList.remove('language-switch-animation');
+            }, 800);
+            
+            updateLanguageMode();
+            updateQuote();
+        }
+        
+        // Function to update language mode styling
+        function updateLanguageMode() {
+            const body = document.body;
+            const html = document.documentElement;
+            const swipeIndicator = document.getElementById('swipeIndicator');
+            
+            if (currentLanguage === 'french') {
+                // French mode - night background
+                body.classList.add('french-mode');
+                html.setAttribute('lang', 'fr');
+                html.setAttribute('dir', 'ltr');
+                // Show Arabic instruction when in French mode
+                swipeIndicator.textContent = 'اسحب لأعلى لتبديل اللغة';
+            } else {
+                // Arabic mode - original background
+                body.classList.remove('french-mode');
+                html.setAttribute('lang', 'ar');
+                html.setAttribute('dir', 'rtl');
+                // Show French instruction when in Arabic mode
+                swipeIndicator.textContent = 'Glissez vers le haut pour changer de langue';
+            }
+        }
+        
+        // Function to update quote
+        function updateQuote() {
+            const hadithText = document.querySelector('.hadith-text');
+            const newQuote = getRandomQuote();
+            
+            hadithText.style.opacity = '0';
+            hadithText.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                hadithText.textContent = newQuote;
+                hadithText.style.transition = 'all 0.5s ease-out';
+                hadithText.style.opacity = '1';
+                hadithText.style.transform = 'translateY(0)';
+            }, 200);
+        }
+        
+        // Touch/swipe detection
+        let startY = 0;
+        let endY = 0;
+        let isSwipeActive = false;
+        
+        function handleTouchStart(e) {
+            startY = e.touches[0].clientY;
+            isSwipeActive = true;
+            
+            // Add swipe animation class to body for visual feedback
+            document.body.classList.add('swipe-animation');
+        }
+        
+        function handleTouchEnd(e) {
+            endY = e.changedTouches[0].clientY;
+            isSwipeActive = false;
+            
+            // Remove swipe animation class
+            document.body.classList.remove('swipe-animation');
+            
+            handleSwipe();
+        }
+        
+        function handleSwipe() {
+            const swipeThreshold = 50; // Minimum distance for swipe
+            const swipeDistance = startY - endY; // Positive means swipe up
+            
+            if (swipeDistance > swipeThreshold) {
+                // Swipe up detected - switch language
+                switchLanguage();
+            }
         }
         
         // Add some interactive effects
@@ -265,9 +473,17 @@
             const quoteContainer = document.querySelector('.quote-container');
             const decorations = document.querySelectorAll('.decoration');
             const hadithText = document.querySelector('.hadith-text');
+            const swipeIndicator = document.getElementById('swipeIndicator');
             
             // Set random quote on page load
             hadithText.textContent = getRandomQuote();
+            
+            // Initialize language mode
+            updateLanguageMode();
+            
+            // Add touch event listeners for swipe detection
+            document.addEventListener('touchstart', handleTouchStart, false);
+            document.addEventListener('touchend', handleTouchEnd, false);
             
             // Add click effect to the quote (also changes quote)
             quoteContainer.addEventListener('click', function() {
@@ -281,7 +497,7 @@
                 let newQuote;
                 do {
                     newQuote = getRandomQuote();
-                } while (newQuote === currentQuote && hadithQuotes.length > 1);
+                } while (newQuote === currentQuote && (currentLanguage === 'arabic' ? hadithQuotes.length : frenchQuotes.length) > 1);
                 
                 hadithText.style.opacity = '0';
                 hadithText.style.transform = 'translateY(20px)';
